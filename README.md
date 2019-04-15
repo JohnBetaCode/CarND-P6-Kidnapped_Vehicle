@@ -15,8 +15,18 @@ General:
     3 - Does your code use a particle filter to localize the robot?: There may be ways to “beat” the automatic grader without actually implementing the full particle filter. You will meet this criteria if the methods you write in particle_filter.cpp behave as expected.
     
 **********************************************************************
--->
+Markov Localization and the Kidnapped Vehicle Project
 
+The localization module culminates in the Kidnapped Vehicle Project. In that project our vehicle has been kidnapped and placed in an unknown location. We must leverage our knowledge of localization to determine where our vehicle is. The Kidnapped Vehicle Project relies heavily on the particle filter approach to localization, particularly "Implementation of a Particle Filter," an upcoming lesson. This leaves the question; How does Markov Localization relate to the Kidnapped Vehicle project?
+
+Markov Localization or Bayes Filter for Localization is a generalized filter for localization and all other localization approaches are realizations of this approach, as we'll discuss later on. By learning how to derive and implement (coding exercises) this filter we develop intuition and methods that will help us solve any vehicle localization task, including implementation of a particle filter. We don't know exactly where our vehicle is at any given time, but can approximate it's location. As such, we generally think of our vehicle location as a probability distribution, each time we move, our distribution becomes more diffuse (wider). We pass our variables (map data, observation data, and control data) into the filter to concentrate (narrow) this distribution, at each time step. Each state prior to applying the filter represents our prior and the narrowed distribution represents our Bayes' posterior.
+
+**********************************************************************
+-->
+# CarND-P6-Kidnapped_Vehicle
+[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+
+<img src="writeup_files/banner.jpg" alt="drawing" width="800"/> 
 
 # Overview
 This repository contains all the code needed to complete the final project for the Localization course in Udacity's Self-Driving Car Nanodegree.
@@ -60,46 +70,39 @@ INPUT: values provided by the simulator to the c++ program
 
 // sense noisy position data from the simulator
 
-["sense_x"]
-
-["sense_y"]
-
-["sense_theta"]
+    ["sense_x"]
+    ["sense_y"]
+    ["sense_theta"]
 
 // get the previous velocity and yaw rate to predict the particle's transitioned state
 
-["previous_velocity"]
-
-["previous_yawrate"]
+    ["previous_velocity"]
+    ["previous_yawrate"]
 
 // receive noisy observation data from the simulator, in a respective list of x/y values
 
-["sense_observations_x"]
-
-["sense_observations_y"]
+    ["sense_observations_x"]
+    ["sense_observations_y"]
 
 
 OUTPUT: values provided by the c++ program to the simulator
 
 // best particle values used for calculating the error evaluation
 
-["best_particle_x"]
-
-["best_particle_y"]
-
-["best_particle_theta"]
+    ["best_particle_x"]
+    ["best_particle_y"]
+    ["best_particle_theta"]
 
 //Optional message data used for debugging particle's sensing and associations
 
 // for respective (x,y) sensed positions ID label
 
-["best_particle_associations"]
+    ["best_particle_associations"]
 
 // for respective (x,y) sensed positions
 
-["best_particle_sense_x"] <= list of sensed x positions
-
-["best_particle_sense_y"] <= list of sensed y positions
+    ["best_particle_sense_x"] <= list of sensed x positions
+    ["best_particle_sense_y"] <= list of sensed y positions
 
 
 Your job is to build out the methods in `particle_filter.cpp` until the simulator output says:
@@ -132,7 +135,7 @@ root
     |   particle_filter.h
 ```
 
-The only file you should modify is `particle_filter.cpp` in the `src` directory. The file contains the scaffolding of a `ParticleFilter` class and some associated methods. Read through the code, the comments, and the header file `particle_filter.h` to get a sense for what this code is expected to do.
+The only file you modified was `particle_filter.cpp` in the `src` directory. The file contains the scaffolding of a `ParticleFilter` class and some associated methods. Read through the code, the comments, and the header file `particle_filter.h` to get a sense for what this code is expected to do.
 
 If you are interested, take a look at `src/main.cpp` as well. This file contains the code that will actually be running your particle filter and calling the associated methods.
 
@@ -161,3 +164,13 @@ The things the grading code is looking for are:
 
 ## How to write a README
 A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+
+---
+> **Date:** &nbsp; 04/XX/2019  
+> **Programmer:** &nbsp;John A. Betancourt G.   
+> **Mail:** &nbsp;john.betancourt93@gmail.com  
+> **Web:** &nbsp; www.linkedin.com/in/jhon-alberto-betancourt-gonzalez-345557129 
+
+<img src="https://media2.giphy.com/media/KNNh3ZshGXkqY/giphy.gif?cid=790b76115cb40c3a6b4f6c564d994597" alt="drawing" width="400"/> 
+
+<!-- Sorry for my English -->

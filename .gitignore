@@ -104,4 +104,6 @@ venv.bak/
 .mypy_cache/
 term2_sim_linux/
 build/
+.vscode/
+
 
