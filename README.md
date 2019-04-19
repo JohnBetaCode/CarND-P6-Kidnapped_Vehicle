@@ -14,6 +14,11 @@ Performance
 General:
     3 - Does your code use a particle filter to localize the robot?: There may be ways to “beat” the automatic grader without actually implementing the full particle filter. You will meet this criteria if the methods you write in particle_filter.cpp behave as expected.
 
+Note that the programs that need to be written to accomplish the project are src/particle_filter.cpp, and particle_filter.h 
+
+Your job is to build out the methods in `particle_filter.cpp` until the simulator output says: Success! Your particle filter passed!
+
+
 https://github.com/darienmt/CarND-Kidnapped-Vehicle-P3
 
 **********************************************************************
@@ -25,7 +30,7 @@ https://github.com/darienmt/CarND-Kidnapped-Vehicle-P3
 
 ## Overview
 
-In this project I implemented a 2 dimensional particle filter in C++. The particle filter was be given a map and some initial localization information (analogous to what a GPS would provide). At each time step the filter will also get observation and control data. The robot has been kidnapped and transported to a new location! Luckily it has a map of this location, a (noisy) GPS estimate of its initial location, and lots of (noisy) sensor and control data.
+In this [project](https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle) I implemented a 2 dimensional particle filter in C++. The particle filter was be given a map and some initial localization information (analogous to what a GPS would provide). At each time step the filter will also get observation and control data. The robot has been kidnapped and transported to a new location! Luckily it has a map of this location, a (noisy) GPS estimate of its initial location, and lots of (noisy) sensor and control data.
 
 ---
 ## Project Introduction
@@ -34,23 +39,40 @@ The Kidnapped Vehicle Project relies heavily on the particle filter approach to 
 
 Markov Localization or Bayes Filter for Localization is a generalized filter for localization and all other localization approaches are realizations of this approach, as we'll discuss later on. By learning how to derive and implement (coding exercises) this filter we develop intuition and methods that will help us solve any vehicle localization task, including implementation of a particle filter. We don't know exactly where our vehicle is at any given time, but can approximate it's location. As such, we generally think of our vehicle location as a probability distribution, each time we move, our distribution becomes more diffuse (wider). We pass our variables (map data, observation data, and control data) into the filter to concentrate (narrow) this distribution, at each time step. Each state prior to applying the filter represents our prior and the narrowed distribution represents our Bayes' posterior.
 
+---
+## Particle Filter Results
 
-<!-- 
-Note that the programs that need to be written to accomplish the project are src/particle_filter.cpp, and particle_filter.h 
+### **Accuracy**  
+*1 - Does the particle filter localize the vehicle to within the desired accuracy?*
 
-Your job is to build out the methods in `particle_filter.cpp` until the simulator output says: Success! Your particle filter passed!
+This criteria is checked automatically when you do ./run.sh in the terminal. If the output says "Success! Your particle filter passed!" then it means you’ve met this criteria.
 
-1. **Accuracy**: your particle filter should localize vehicle position and yaw to within the values specified in the parameters `max_translation_error` and `max_yaw_error` in `src/main.cpp`.
+<!-- your particle filter should localize vehicle position and yaw to within the values specified in the parameters `max_translation_error` and `max_yaw_error` in `src/main.cpp`. -->
 
-2. **Performance**: your particle filter should complete execution within the time of 100 seconds.
+### **Performance** 
+
+*2 - Does the particle run within the specified time of 100 seconds?*  
+
+This criteria is checked automatically when you do ./run.sh in the terminal. If the output says "Success! Your particle filter passed!" then it means you’ve met this criteria.
+
+<!-- 2. **Performance**: your particle filter should complete execution within the time of 100 seconds.
 -->
+
+
+### **General** 
+
+*3 - Does the code use a particle filter to localize the robot?*
+
+There may be ways to “beat” the automatic grader without actually implementing the full particle filter. You will meet this criteria if the methods you write in particle_filter.cpp behave as expected.
 
 ---
 ## Running the Code
 
-This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases)
+This project involves the Term 2 Simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases). The Term 2 Simulator includes a graphical version of the Kidnapped Vehicle Project. Running the simulator you can see the path that the car drives along with all of its landmark measurements. The simulator can also display the best particle's sensed positions, along with the corresponding map ID associations. This can be extremely helpful to make sure transition and association calculations were done correctly. Notice that the green laser sensors from the car nearly overlap the blue laser sensors from the particle, this means that the particle transition calculations were done correctly. 
 
-This repository includes two files that can be used to set up and install uWebSocketIO for either Linux or Mac systems. For windows you can use either Docker, VMware, or even Windows 10 Bash on Ubuntu to install uWebSocketIO.
+Once the scene is loaded you can hit the START button to observe how the car drives and observes landmarks. At any time you can press the PAUSE button, to pause the scene or hit the RESTART button to reset the scene. Also the ARROW KEYS can be used to move the camera around, and the top left ZOOM IN/OUT buttons can be used to focus the camera. Pressing the ESCAPE KEY returns to the simulator main menu
+
+This repository includes two files that can be used to set up and install uWebSocketIO for either Linux or Mac systems. For windows you can use either Docker, VMware, or even Windows 10 Bash on Ubuntu to install uWebSocketIO. The simulator provides the script for the noisy position data, vehicle controls, and noisy observations. The script feeds back the best particle state.
 
 Once the install for uWebSocketIO is complete, the main program can be built and ran by doing the following from the project top directory.
 
@@ -66,7 +88,7 @@ Alternatively some scripts have been included to streamline this process, these 
 2. ./build.sh
 3. ./run.sh
 
-Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
+Tips for setting up the environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 
 The program main.cpp has already been filled out, but feel free to modify it.
 
@@ -89,7 +111,6 @@ Here is the main protocol that main.cpp uses for uWebSocketIO in communicating w
 
     ["sense_observations_x"]
     ["sense_observations_y"]
-
 
 **OUTPUT**: values provided by the c++ program to the simulator
 
@@ -134,22 +155,18 @@ root
     |   particle_filter.h
 ```
 
-The only file modified was `particle_filter.cpp` in the `src` directory. The file contains the scaffolding of a `ParticleFilter` class and some associated methods. Read through the code, the comments, and the header file `particle_filter.h` to get a sense for what this code is expected to do.
+The only file modified was [`particle_filter.cpp`](https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle/blob/master/src/particle_filter.cpp) in the [`src`](https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle/tree/master/src) directory. The file contains the scaffolding of a `ParticleFilter` class and some associated methods. Read through the code, the comments, and the header file [`particle_filter.h`](https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle/blob/master/src/particle_filter.h) to get a sense for what this code is expected to do.
 
-If you are interested, take a look at `src/main.cpp` as well. This file contains the code that will actually be running in the particle filter and calling the associated methods.
+If you are interested, take a look at [`src/main.cpp`](https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle/blob/master/src/main.cpp) as well. This file contains the code that will actually be running in the particle filter and calling the associated methods.
 
+---
 ## Inputs to the Particle Filter
-You can find the inputs to the particle filter in the `data` directory.
 
-### The Map
-`map_data.txt` includes the position of landmarks (in meters) on an arbitrary Cartesian coordinate system. Each row has three columns
+You can find the inputs to the particle filter in the [`data`](https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle/tree/master/data) directory. The [`map_data.txt`](https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle/blob/master/data/map_data.txt) includes the position of landmarks (in meters) on an arbitrary Cartesian coordinate system. Each row has three columns:
+
 1. x position
 2. y position
 3. landmark id
-
-### All other data the simulator provides, such as observations and controls.
-
-> * Map data provided by 3D Mapping Solutions GmbH.
 
 ---
 > **Date:** &nbsp; 04/21/2019  
