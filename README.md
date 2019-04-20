@@ -31,10 +31,8 @@ Video Informartion:
         Code, AI, selfdriving car, python, c++, Kidnapped Vehicle, CarND, Udacity, Particle Filter, MArkov Localization, Localization, Motion Models, Localization, Path Planning, Control, System Integration, Term2
 
 **********************************************************************
-https://github.com/darienmt/CarND-Kidnapped-Vehicle-P3
-
-**********************************************************************
 -->
+
 # CarND-P6-Kidnapped_Vehicle
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
@@ -88,7 +86,7 @@ The Particle Filter is implemented in src/particle_filter.cpp:
 <img src="writeup_files/CarND-P6-Kidnapped_Vehicle.gif" alt="drawing" width="800"/> 
 
 [*CarND-P6-Kidnapped_Vehicle.mp4*](Put link here)  
-[*CarND-P6-Kidnapped_Vehicle*](Put link here)  
+[*CarND-P6-Kidnapped_Vehicle*](https://youtu.be/-OaUo-mNHwk)  
 
 ---
 ## Running the Code

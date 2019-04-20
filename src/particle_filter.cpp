@@ -6,7 +6,6 @@
  */
 
 #include "particle_filter.h"
-#include "helper_functions.h"
 
 #include <math.h>
 #include <algorithm>
@@ -16,139 +15,88 @@
 #include <random>
 #include <string>
 #include <vector>
-#include <sstream>
+
+#include "helper_functions.h"
 
 using std::string;
 using std::vector;
 
-/**
- * init Initializes particle filter by initializing particles to Gaussian
- *   distribution around first position and all the weights to 1.
- * @param x Initial x position [m] (simulated estimate from GPS)
- * @param y Initial y position [m]
- * @param theta Initial orientation [rad]
- * @param std[] Array of dimension 3 [standard deviation of x [m], 
- *   standard deviation of y [m], standard deviation of yaw [rad]]
- */
+static std::default_random_engine gen;
+
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
   /**
-   * TODO: (Done) Set the number of particles. Initialize all particles to 
-   * first position (based on estimates of x, y, theta and their uncertainties
-   * from GPS) and all weights to 1. 
-  */
+   * TODO: Set the number of particles. Initialize all particles to 
+   *   first position (based on estimates of x, y, theta and their uncertainties
+   *   from GPS) and all weights to 1. 
+   * TODO: Add random Gaussian noise to each particle.
+   * NOTE: Consult particle_filter.h for more information about this method 
+   *   (and others in this file).
+   */
+  num_particles = 100;
 
-  if (is_initialized) {
-    return;
-  }
-
-  // TODO: (Done) Set the number of particles
-  // Few particles, not enough to cover all of the high likehood positions
-  // Many particles slow down the filter
-  num_particles = 200;  
-
-  // Extract and set the standard deviations for x, y, and theta
   double std_x = std[0];
   double std_y = std[1];
   double std_theta = std[2];
 
-  // Creating normal distribution for x, y, and theta
   std::normal_distribution<double> dist_x(x, std_x);
   std::normal_distribution<double> dist_y(y, std_y);
   std::normal_distribution<double> dist_theta(theta, std_theta);
 
-  /*
-   * TODO: (None) Add random Gaussian noise to each particle.
-   * NOTE: Consult particle_filter.h for more information about this method 
-   * (and others in this file).
-  */
- 
-  // Generate particles with normal distribution with mean on GPS values.
   for (int i = 0; i < num_particles; i++) {
+    Particle p;
+    p.id = i;
+    p.x = dist_x(gen);
+    p.y = dist_y(gen);
+    p.theta = dist_theta(gen);
+    p.weight = 1;
 
-    Particle particle;
-    particle.id = i;
-    particle.x = dist_x(gen);
-    particle.y = dist_y(gen);
-    particle.theta = dist_theta(gen);
-    particle.weight = 1.0;
+    particles.push_back(p);
+    weights.push_back(1);
+  }
 
-    // Print your samples to the terminal.
-    // std::cout << "Particle: " << i 
-    //           << " x:" << particle.x  
-    //           << " y:" << particle.y 
-    //           << " theta:" << particle.theta 
-    //           << std::endl;
-
-    particles.push_back(particle);
-	}
-
-  // The filter is now initialized.
   is_initialized = true;
+
 
 }
 
-/**
- * prediction Predicts the state for the next time step
- *   using the process model.
- * @param delta_t Time between time step t and t+1 in measurements [s]
- * @param std_pos[] Array of dimension 3 [standard deviation of x [m], 
- *   standard deviation of y [m], standard deviation of yaw [rad]]
- * @param velocity Velocity of car from t to t+1 [m/s]
- * @param yaw_rate Yaw rate of car from t to t+1 [rad/s]
- */
 void ParticleFilter::prediction(double delta_t, double std_pos[], 
                                 double velocity, double yaw_rate) {
   /**
-   * TODO: (Done) Add measurements to each particle and add random Gaussian noise.
+   * TODO: Add measurements to each particle and add random Gaussian noise.
    * NOTE: When adding noise you may find std::normal_distribution 
    *   and std::default_random_engine useful.
    *  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
    *  http://www.cplusplus.com/reference/random/default_random_engine/
    */
 
-  // Extracting standard deviations
-  double std_x = std_pos[0];
-  double std_y = std_pos[1];
-  double std_theta = std_pos[2];
+  double new_x;
+  double new_y;
+  double new_theta;
 
-  // Creating normal distributions
-  std::normal_distribution<double> dist_x(0, std_x);
-  std::normal_distribution<double> dist_y(0, std_y);
-  std::normal_distribution<double> dist_theta(0, std_theta);
-
-  // Limit to considere yaw rate is changing is not noise
-  double yaw_rate_umbral = 0.0001;
-
-  // Calculate new state for each particle
-  for (int i = 0; i < num_particles; i++) {
-
-  	double theta = particles[i].theta;
-
-    // If yaw is not changing
-    if (fabs(yaw_rate) < yaw_rate_umbral ) { 
-      particles[i].x += velocity * delta_t * cos( theta );
-      particles[i].y += velocity * delta_t * sin( theta );
-      // yaw continue to be the same
+  for (int i = 0; i < num_particles; i++){
+    Particle p = particles[i];
+    if (yaw_rate == 0) {
+      new_x = p.x + velocity*delta_t*std::cos(p.theta);
+      new_y = p.y + velocity*delta_t*std::sin(p.theta);
+      new_theta = p.theta;
     } else {
-      particles[i].x += velocity / yaw_rate * ( sin( theta + yaw_rate * delta_t ) - sin( theta ) );
-      particles[i].y += velocity / yaw_rate * ( cos( theta ) - cos( theta + yaw_rate * delta_t ) );
-      particles[i].theta += yaw_rate * delta_t;
+      new_x = p.x + velocity/yaw_rate*(std::sin(p.theta + yaw_rate*delta_t) - std::sin(p.theta));
+      new_y = p.y + velocity/yaw_rate*(std::cos(p.theta) - std::cos(p.theta + yaw_rate*delta_t));
+      new_theta = p.theta + yaw_rate*delta_t;
     }
 
-    // Adding noise
-    particles[i].x += dist_x(gen);
-    particles[i].y += dist_y(gen);
-    particles[i].theta += dist_theta(gen);
+  std::normal_distribution<double> dist_x(new_x, std_pos[0]);
+  std::normal_distribution<double> dist_y(new_y, std_pos[1]);
+  std::normal_distribution<double> dist_theta(new_theta, std_pos[2]);
+
+  particles[i].x = dist_x(gen);
+  particles[i].y = dist_y(gen);
+  particles[i].theta = dist_theta(gen);
+
   }
 
 }
 
-/**
- * dataAssociation Finds which observations correspond to which landmarks 
- *   (likely by using a nearest-neighbors data association).
- * @param predicted Vector of predicted landmark observations
- * @param observations Vector of landmark observations
- */
 void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted, 
                                      vector<LandmarkObs>& observations) {
   /**
@@ -158,19 +106,27 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
    * NOTE: this method will NOT be called by the grading code. But you will 
    *   probably find it useful to implement this method and use it as a helper 
    *   during the updateWeights phase.
-   */
-
+    */
+    for(unsigned int i = 0; i < observations.size(); i++) {
+      int nObs = observations.size();
+      int nPred = predicted.size();
+      for( int i = 0; i < nObs; i++) { // For each observation
+        double minDist = std::numeric_limits<double>::max();
+        int mapId = -1;
+        for(int j = 0; j < nPred; j++ ) { // For each predition.
+          double xDist = observations[i].x - predicted[j].x;
+          double yDist = observations[i].y - predicted[j].y;
+          double distance = xDist * xDist + yDist * yDist;
+          if(distance < minDist) {
+            minDist = distance;
+            mapId = predicted[j].id;
+          }
+          observations[i].id = mapId;
+        }
+      }
+    }
 }
 
-/**
- * updateWeights Updates the weights for each particle based on the likelihood
- *   of the observed measurements. 
- * @param sensor_range Range [m] of sensor
- * @param std_landmark[] Array of dimension 2
- *   [Landmark measurement uncertainty [x [m], y [m]]]
- * @param observations Vector of landmark observations
- * @param map Map class containing map landmarks
- */
 void ParticleFilter::updateWeights(double sensor_range, double std_landmark[], 
                                    const vector<LandmarkObs> &observations, 
                                    const Map &map_landmarks) {
@@ -188,12 +144,61 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
    *   (look at equation 3.33) http://planning.cs.uiuc.edu/node99.html
    */
 
+  for (int p = 0; p < num_particles; p++) {
+    vector<int> associations;
+    vector<double> sense_x;
+    vector<double> sense_y;
+    vector<LandmarkObs> transformed_observations;
+    LandmarkObs t_o;
+    LandmarkObs obs;
+    Particle particle = particles[p];
+
+    for (unsigned int j = 0; j < observations.size(); j++) {
+      obs = observations[j];
+      t_o.x = particle.x + obs.x*std::cos(particle.theta) - obs.y*std::sin(particle.theta);
+      t_o.y = particle.y + obs.x*std::sin(particle.theta) + obs.y*std::cos(particle.theta);
+      transformed_observations.push_back(t_o);
+    }
+
+    particles[p].weight = 1;
+    double closest = std::pow(sensor_range, 2.0);
+    for (unsigned int i = 0; i < transformed_observations.size(); i++ ){
+      LandmarkObs obs = transformed_observations[i];
+      int minIndex = 0;
+      for (unsigned int j = 0; j < map_landmarks.landmark_list.size(); j++) {
+        double landmark_x = map_landmarks.landmark_list[j].x_f;
+        double landmark_y = map_landmarks.landmark_list[j].y_f;
+
+        double calculated = std::pow(obs.x - landmark_x, 2.0 ) + std::pow(obs.y - landmark_y, 2.0);
+        if (calculated < closest) {
+          closest = calculated;
+          minIndex = j;
+        }
+      }
+      double x = obs.x;
+      double y = obs.y;
+      double mu_x = map_landmarks.landmark_list[minIndex].x_f;
+      double mu_y = map_landmarks.landmark_list[minIndex].y_f;
+      double std_x = std_landmark[0];
+      double std_y = std_landmark[1];
+
+      double multiplier = 1/(2*M_PI*std_x*std_y)*std::exp(-0.5*(std::pow((x-mu_x)/std_x, 2) + std::pow((y-mu_y)/std_y, 2)));
+      if (multiplier > 0){
+        particles[p].weight *= multiplier;
+      }
+
+      associations.push_back(minIndex+1);
+      sense_x.push_back(x);
+      sense_y.push_back(y);
+        
+        
+    }
+    weights[p] = particles[p].weight;
+    SetAssociations(particles[p], associations, sense_x, sense_y);
+  }
+
 }
 
-/**
- * resample Resamples from the updated set of particles to form
- *   the new set of particles.
- */
 void ParticleFilter::resample() {
   /**
    * TODO: Resample particles with replacement with probability proportional 
@@ -201,15 +206,26 @@ void ParticleFilter::resample() {
    * NOTE: You may find std::discrete_distribution helpful here.
    *   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
    */
+  vector<Particle> new_particles;
+  std::uniform_int_distribution<> int_dist(0, num_particles-1);
+  int index = int_dist(gen);
 
+  double max_weight = *std::max_element(weights.begin(), weights.end());
+  std::uniform_real_distribution<double> real_dist(0.0, 2*max_weight);
+  double beta = 0;
+
+  for (int i = 0; i < num_particles; i++) {
+    beta += real_dist(gen);
+    while(beta > weights[index]) {
+      beta -= weights[index];
+      index = (index + 1) % num_particles;
+    }
+    new_particles.push_back(particles[index]);
+  }
+
+  particles = new_particles;
 }
 
-/**
-   * Set a particles list of associations, along with the associations'
-   *   calculated world x,y coordinates
-   * This can be a very useful debugging tool to make sure transformations 
-   *   are correct and assocations correctly connected
-   */
 void ParticleFilter::SetAssociations(Particle& particle, 
                                      const vector<int>& associations, 
                                      const vector<double>& sense_x, 
@@ -224,9 +240,6 @@ void ParticleFilter::SetAssociations(Particle& particle,
   particle.sense_y = sense_y;
 }
 
-/**
- * Used for obtaining debugging information related to particles.
- */
 string ParticleFilter::getAssociations(Particle best) {
   vector<int> v = best.associations;
   std::stringstream ss;
@@ -236,9 +249,6 @@ string ParticleFilter::getAssociations(Particle best) {
   return s;
 }
 
-/**
- * Used for obtaining debugging information related to particles.
- */
 string ParticleFilter::getSenseCoord(Particle best, string coord) {
   vector<double> v;
 
