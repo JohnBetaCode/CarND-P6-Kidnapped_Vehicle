@@ -1,7 +1,7 @@
 <!-- 
 **********************************************************************
 https://review.udacity.com/#!/rubrics/747/view
-
+2. Localization, Path Planning, Control, and System Integration
 Project Specification
 CarND-P6-Kidnapped Vehicle
 
@@ -14,11 +14,23 @@ Performance
 General:
     3 - Does your code use a particle filter to localize the robot?: There may be ways to “beat” the automatic grader without actually implementing the full particle filter. You will meet this criteria if the methods you write in particle_filter.cpp behave as expected.
 
+**********************************************************************
 Note that the programs that need to be written to accomplish the project are src/particle_filter.cpp, and particle_filter.h 
-
 Your job is to build out the methods in `particle_filter.cpp` until the simulator output says: Success! Your particle filter passed!
 
+**********************************************************************
+Video Informartion:
+    CarND-P6-Kidnapped_Vehicle
 
+    In this project I implemented a 2 dimensional particle filter in C++. The particle filter was be given a map and some initial localization information (analogous to what a GPS would provide). At each time step the filter will also get observation and control data. The robot has been kidnapped and transported to a new location! Luckily it has a map of this location, a (noisy) GPS estimate of its initial location, and lots of (noisy) sensor and control data.
+
+    Repository:
+        https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle
+
+    Keywords:
+        Code, AI, selfdriving car, python, c++, Kidnapped Vehicle, CarND, Udacity, Particle Filter, MArkov Localization, Localization, Motion Models, Localization, Path Planning, Control, System Integration, Term2
+
+**********************************************************************
 https://github.com/darienmt/CarND-Kidnapped-Vehicle-P3
 
 **********************************************************************
@@ -58,12 +70,25 @@ This criteria is checked automatically when you do ./run.sh in the terminal. If 
 <!-- 2. **Performance**: your particle filter should complete execution within the time of 100 seconds.
 -->
 
-
 ### **General** 
 
 *3 - Does the code use a particle filter to localize the robot?*
 
 There may be ways to “beat” the automatic grader without actually implementing the full particle filter. You will meet this criteria if the methods you write in particle_filter.cpp behave as expected.
+
+### **Results** 
+
+The Particle Filter is implemented in src/particle_filter.cpp:
+
+* Initialization: Particle initialization is implemented at ParticleFilter::init from line 24 to line 62.
+* Prediction: The prediction step is implemented at ParticleFilter::prediction from line 64 to line 100.
+* Weight's update: This is the more important operation in my opinion. It is implemented at ParticleFilter::updateWeights from line 138 to line 217.
+* Almost the rest of the magic happens on src/main.cpp. The event handler declared at line 49 parse the received message and call the above described Particle Filter methods.
+
+<img src="writeup_files/CarND-P6-Kidnapped_Vehicle.gif" alt="drawing" width="800"/> 
+
+[*CarND-P6-Kidnapped_Vehicle.mp4*](Put link here)  
+[*CarND-P6-Kidnapped_Vehicle*](Put link here)  
 
 ---
 ## Running the Code

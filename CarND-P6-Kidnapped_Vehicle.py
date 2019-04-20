@@ -63,9 +63,10 @@ def main():
             os.system('clear && cd build && make') 
 
         processes = (
-            "{}".format(os.path.join(os.getcwd(), "term2_sim_linux", "term2_sim.x86_64")),
-            "{}".format(0, os.path.join(os.getcwd(), "build", "particle_filter"))
+            "\{}".format(os.path.join(os.getcwd(), "term2_sim_linux", "term2_sim.x86_64")),
+            "\cd {} && ./{}".format(os.path.join(os.getcwd(), "build"), "particle_filter")
         )
+
         # Run simulator and socket
         pool = Pool(processes=len(processes))                                                        
         pool.map(run_process, processes)
