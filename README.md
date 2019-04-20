@@ -19,18 +19,6 @@ Note that the programs that need to be written to accomplish the project are src
 Your job is to build out the methods in `particle_filter.cpp` until the simulator output says: Success! Your particle filter passed!
 
 **********************************************************************
-Video Informartion:
-    CarND-P6-Kidnapped_Vehicle
-
-    In this project I implemented a 2 dimensional particle filter in C++. The particle filter was be given a map and some initial localization information (analogous to what a GPS would provide). At each time step the filter will also get observation and control data. The robot has been kidnapped and transported to a new location! Luckily it has a map of this location, a (noisy) GPS estimate of its initial location, and lots of (noisy) sensor and control data.
-
-    Repository:
-        https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle
-
-    Keywords:
-        Code, AI, selfdriving car, python, c++, Kidnapped Vehicle, CarND, Udacity, Particle Filter, MArkov Localization, Localization, Motion Models, Localization, Path Planning, Control, System Integration, Term2
-
-**********************************************************************
 -->
 
 # CarND-P6-Kidnapped_Vehicle
@@ -57,23 +45,22 @@ Markov Localization or Bayes Filter for Localization is a generalized filter for
 *2 - Performance: Does the particle run within the specified time of 100 seconds?*  
 *3 - General: Does the code use a particle filter to localize the robot?*
 
-These criterias are checked automatically when ./run.sh is typed in the terminal. If the output says "Success! the particle filter passed!" then it means the project mets all criteria.
+These criteria are checked automatically when ./run.sh is typed in the terminal. If the output says "Success! the particle filter passed!" then it means the project mets all criteria.
 
 ### **Results** 
 
 The Particle Filter is implemented in src/particle_filter.cpp:
 
-* Initialization: Particle initialization is implemented at ParticleFilter::init from line 24 to line 62.
-* Prediction: The prediction step is implemented at ParticleFilter::prediction from line 64 to line 100.
-* Weight's update: This is the more important operation in my opinion. It is implemented at ParticleFilter::updateWeights from line 138 to line 217.
-* Almost the rest of the magic happens on src/main.cpp. The event handler declared at line 49 parse the received message and call the above described Particle Filter methods.
+* Initialization: Particle initialization is implemented at function `ParticleFilter::init()` from line 34 to line 90.
+* Prediction: The prediction step is implemented at function `ParticleFilter::prediction()` from line 102 to line 141.
+* Weight's update: This is the more important operation in my opinion. It is implemented at function `ParticleFilter::updateWeights()` from line 195
+* The rest of black magic happens in [`src/main.cpp`](https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle/blob/master/src/main.cpp).
 
 <img src="writeup_files/particle_filter_test_1.gif" alt="drawing" width="500"/> 
+<img src="writeup_files/particle_filter_test_2.gif" alt="drawing" width="500"/>  
 
-<img src="writeup_files/particle_filter_test_2.gif" alt="drawing" width="500"/> 
-
-[*CarND-P6-Kidnapped_Vehicle.mp4*](https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle/blob/master/video_results/particle_filter_test.mp4)  
-[*CarND-P6-Kidnapped_Vehicle*](https://youtu.be/-OaUo-mNHwk)  
+[*CarND-P6-Kidnapped_Vehicle.mp4*](https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle/blob/master/video_results/particle_filter_test.mp4)   
+[*CarND-P6-Kidnapped_Vehicle*](https://youtu.be/-OaUo-mNHwk)   
 
 ---
 ## Running the Code

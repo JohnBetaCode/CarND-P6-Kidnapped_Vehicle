@@ -56,14 +56,13 @@ class ParticleFilter {
    * @param yaw_rate Yaw rate of car from t to t+1 [rad/s]
    */
   void prediction(double delta_t, double std_pos[], double velocity, 
-                  double yaw_rate);
+                  double yaw_rate);  
   
   /**
    * dataAssociation Finds which observations correspond to which landmarks 
    *   (likely by using a nearest-neighbors data association).
    * @param predicted Vector of predicted landmark observations
-   * @param observations Vector of landmark observations
-   */
+   * @param observations Vector of landmark observations*/
   void dataAssociation(std::vector<LandmarkObs> predicted, 
                        std::vector<LandmarkObs>& observations);
   
@@ -74,8 +73,7 @@ class ParticleFilter {
    * @param std_landmark[] Array of dimension 2
    *   [Landmark measurement uncertainty [x [m], y [m]]]
    * @param observations Vector of landmark observations
-   * @param map Map class containing map landmarks
-   */
+   * @param map Map class containing map landmarks*/
   void updateWeights(double sensor_range, double std_landmark[], 
                      const std::vector<LandmarkObs> &observations,
                      const Map &map_landmarks);
