@@ -52,27 +52,12 @@ Markov Localization or Bayes Filter for Localization is a generalized filter for
 ---
 ## Particle Filter Results
 
-### **Accuracy**  
-*1 - Does the particle filter localize the vehicle to within the desired accuracy?*
 
-This criteria is checked automatically when you do ./run.sh in the terminal. If the output says "Success! Your particle filter passed!" then it means you’ve met this criteria.
+*1 - Accuracy: Does the particle filter localize the vehicle to within the desired accuracy?*  
+*2 - Performance: Does the particle run within the specified time of 100 seconds?*  
+*3 - General: Does the code use a particle filter to localize the robot?*
 
-<!-- your particle filter should localize vehicle position and yaw to within the values specified in the parameters `max_translation_error` and `max_yaw_error` in `src/main.cpp`. -->
-
-### **Performance** 
-
-*2 - Does the particle run within the specified time of 100 seconds?*  
-
-This criteria is checked automatically when you do ./run.sh in the terminal. If the output says "Success! Your particle filter passed!" then it means you’ve met this criteria.
-
-<!-- 2. **Performance**: your particle filter should complete execution within the time of 100 seconds.
--->
-
-### **General** 
-
-*3 - Does the code use a particle filter to localize the robot?*
-
-There may be ways to “beat” the automatic grader without actually implementing the full particle filter. You will meet this criteria if the methods you write in particle_filter.cpp behave as expected.
+These criterias are checked automatically when ./run.sh is typed in the terminal. If the output says "Success! the particle filter passed!" then it means the project mets all criteria.
 
 ### **Results** 
 
@@ -83,9 +68,11 @@ The Particle Filter is implemented in src/particle_filter.cpp:
 * Weight's update: This is the more important operation in my opinion. It is implemented at ParticleFilter::updateWeights from line 138 to line 217.
 * Almost the rest of the magic happens on src/main.cpp. The event handler declared at line 49 parse the received message and call the above described Particle Filter methods.
 
-<img src="writeup_files/CarND-P6-Kidnapped_Vehicle.gif" alt="drawing" width="800"/> 
+<img src="writeup_files/particle_filter_test_1.gif" alt="drawing" width="500"/> 
 
-[*CarND-P6-Kidnapped_Vehicle.mp4*](Put link here)  
+<img src="writeup_files/particle_filter_test_2.gif" alt="drawing" width="500"/> 
+
+[*CarND-P6-Kidnapped_Vehicle.mp4*](https://github.com/JohnBetaCode/CarND-P6-Kidnapped_Vehicle/blob/master/video_results/particle_filter_test.mp4)  
 [*CarND-P6-Kidnapped_Vehicle*](https://youtu.be/-OaUo-mNHwk)  
 
 ---
